@@ -1,6 +1,14 @@
-﻿
+﻿@model IEnumerable<WebApp.Models.NoteModel>
+
 @{
     ViewBag.Title = "Index";
 }
 
 <h2> Notes </h2>
+
+<ul>
+    @foreach (var note in Model)
+    {
+        <li>@note.Text (@note.CreationDate)</li>
+    }
+</ul>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebApp.Models;
 
 namespace WebApp.Controllers
 {
@@ -11,7 +12,8 @@ namespace WebApp.Controllers
         // GET: Note
         public ActionResult Index()
         {
-            return View();
+            var model = NoteModel.GetAll().ToList();
+            return View(model);
         }
     }
 }

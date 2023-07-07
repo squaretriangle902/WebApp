@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
 
 namespace WebApp.Controllers
 {
-    public class NoteController : Controller
+    public class AwardController : Controller
     {
-        // GET: Note
+        // GET: Award
         public ActionResult Index()
         {
-            var model = NoteModel.GetAll().ToList();
+            var model = AwardModel.GetAll().ToList();
             return View(model);
         }
 
@@ -22,9 +23,9 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(NoteModel noteModel) 
+        public ActionResult Add(AwardModel awardModel)
         {
-            NoteModel.Add(noteModel);
+            AwardModel.Add(awardModel);
             return RedirectToAction("Index");
         }
     }

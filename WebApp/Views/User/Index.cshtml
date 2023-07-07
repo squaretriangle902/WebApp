@@ -1,0 +1,45 @@
+﻿@model IEnumerable<WebApp.Models.UserModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Пользователи</h2>
+
+<p>
+    @Html.ActionLink("Добавить пользователя", "Add")
+</p>
+<table class="table table-hover">
+    <tr>
+        <th>
+            Имя
+        </th>
+        <th>
+            Дата рождения
+        </th>
+        <th>
+            Возраст
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BirthDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Age)
+        </td>
+        <td>
+            @Html.ActionLink("Подробнее", "Get", new { id = item.Id }) |
+            @Html.ActionLink("Изменить", "Update", new { id = item.Id }) |
+            @Html.ActionLink("Удалить", "Remove", new { id = item.Id })
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,5 +1,4 @@
 ﻿using Denis.UserList.Common.Entities;
-using Denis.UserList.DAL.Fake;
 using Denis.UserList.DAL.File;
 using System;
 using System.Collections.Generic;
@@ -77,7 +76,7 @@ namespace Denis.UserList.BLL.Core
         {
             try
             {
-                awardCache.Add(awardID, AwardDAO.GetAllAwards().First(award => award.ID == awardID));
+                awardCache.Add(awardID, AwardDAO.GetAllAwards().First(award => award.Id == awardID));
             }
             catch (Exception exception)
             {
@@ -105,7 +104,7 @@ namespace Denis.UserList.BLL.Core
                 isCacheActual = true;
                 foreach (var award in AwardDAO.GetAllAwards())
                 {
-                    awardCache.Add(award.ID, award);
+                    awardCache.Add(award.Id, award);
                 }
             }
             catch (Exception exception)
@@ -114,5 +113,9 @@ namespace Denis.UserList.BLL.Core
             }
         }
 
+        public void AddAward(Award award)
+        {
+            AddAward(award.Title);
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace Denis.UserList.DAL.File
         {
             InitializeFileSources();
             var awards = GetAllAwards().ToList();
-            MaxAwardID = awards.Any() ? awards.Max(award => award.ID) : 0;
+            MaxAwardID = awards.Any() ? awards.Max(award => award.Id) : 0;
         }
 
         public IEnumerable<Award> GetAllAwards()
@@ -54,9 +54,9 @@ namespace Denis.UserList.DAL.File
         {
             try
             {
-                award.ID = ++MaxAwardID;
+                award.Id = ++MaxAwardID;
                 System.IO.File.AppendAllLines(Common.AwardFileLocation, new[] { AwardDatabaseEntry(award) });
-                return award.ID;
+                return award.Id;
             }
             catch (Exception exception)
             {
@@ -68,9 +68,9 @@ namespace Denis.UserList.DAL.File
         {
             try
             {
-                var databaseIDs = GetAllAwards().Select(award => award.ID);
+                var databaseIDs = GetAllAwards().Select(award => award.Id);
                 System.IO.File.AppendAllLines(Common.AwardFileLocation, 
-                    AwardDatabaseEntries(awards.Where(award => !databaseIDs.Contains(award.ID))));
+                    AwardDatabaseEntries(awards.Where(award => !databaseIDs.Contains(award.Id))));
             }
             catch (Exception exception)
             {
@@ -83,7 +83,7 @@ namespace Denis.UserList.DAL.File
             var awardDatabaseEntries = new List<string>();
             foreach (var award in awards)
             {
-                award.ID = ++MaxAwardID;
+                award.Id = ++MaxAwardID;
                 awardDatabaseEntries.Add(AwardDatabaseEntry(award));
             }
             return awardDatabaseEntries;
@@ -91,7 +91,7 @@ namespace Denis.UserList.DAL.File
 
         private static string AwardDatabaseEntry(Award award)
         {
-            return string.Format("{0},{1}", award.ID.ToString(), award.Title);
+            return string.Format("{0},{1}", award.Id.ToString(), award.Title);
         }
 
         private static void InitializeFileSources()

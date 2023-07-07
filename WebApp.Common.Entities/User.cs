@@ -8,7 +8,7 @@ namespace Denis.UserList.Common.Entities
     {
         private readonly HashSet<Award> awards;
 
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; private set; }
 
@@ -18,7 +18,7 @@ namespace Denis.UserList.Common.Entities
 
         public User(int id, string name, DateTime birthDate)
         {
-            ID = id;
+            Id = id;
             Name = name;
             BirthDate = birthDate;
             awards = new HashSet<Award>();

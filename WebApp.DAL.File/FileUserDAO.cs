@@ -31,7 +31,7 @@ namespace Denis.UserList.DAL.File
             InitializeFileSources();
             this.awardDAO = awardDAO;
             var users = GetAllUsers().ToList();
-            MaxUserID = users.Any() ? users.Max(user => user.ID) : 0;
+            MaxUserID = users.Any() ? users.Max(user => user.Id) : 0;
         }
 
         public IEnumerable<User> GetAllUsers()
@@ -75,8 +75,8 @@ namespace Denis.UserList.DAL.File
 
                 var inputUserAwardEntries = users.Select(user => new
                 {
-                    userID = user.ID,
-                    awardIDs = user.GetAwards().Select(award => award.ID)
+                    userID = user.Id,
+                    awardIDs = user.GetAwards().Select(award => award.Id)
                 }).SelectMany(x => x.awardIDs.Select(awardID => new UserAward(x.userID, awardID)));
 
                 var newUserAwardEntryStrings = inputUserAwardEntries.Except(databaseUserAwardEntries).
@@ -94,9 +94,9 @@ namespace Denis.UserList.DAL.File
         {
             try
             {
-                var databaseIDs = GetAllUsers().Select(user => user.ID);
+                var databaseIDs = GetAllUsers().Select(user => user.Id);
                 System.IO.File.AppendAllLines(Common.UserFileLocation,
-                    UserDatabaseEntryStrings(users.Where(user => !databaseIDs.Contains(user.ID))));
+                    UserDatabaseEntryStrings(users.Where(user => !databaseIDs.Contains(user.Id))));
             }
             catch (Exception exception)
             {
@@ -109,7 +109,7 @@ namespace Denis.UserList.DAL.File
             var userDatabaseEntries = new List<string>();
             foreach (var user in users)
             {
-                user.ID = ++MaxUserID;
+                user.Id = ++MaxUserID;
                 userDatabaseEntries.Add(UserDatabaseEntryString(user));
             }
             return userDatabaseEntries;
@@ -123,7 +123,7 @@ namespace Denis.UserList.DAL.File
 
         private static string UserDatabaseEntryString(User user)
         {
-            return string.Format("{0},{1},{2}", user.ID.ToString(), user.Name, user.BirthDate.ToShortDateString());
+            return string.Format("{0},{1},{2}", user.Id.ToString(), user.Name, user.BirthDate.ToShortDateString());
         }
 
         private static string UserAwardDatabaseEntryString(UserAward userAward)

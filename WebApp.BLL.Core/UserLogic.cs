@@ -75,7 +75,7 @@ namespace Denis.UserList.BLL.Core
             }
         }
 
-        public int AddUser(string name, DateTime birthDate)
+        public int Add(string name, DateTime birthDate)
         {
             if (IsUserValid(name, birthDate))
             {
@@ -85,9 +85,9 @@ namespace Denis.UserList.BLL.Core
             return maxID;
         }
 
-        public void AddUserAward(int userID, int awardID)
+        public void AddUserAward(int userId, int awardId)
         {
-            GetUserInternal(userID).AddAward(awardLogic.GetAward(awardID));
+            GetUserInternal(userId).AddAward(awardLogic.GetAward(awardId));
         }
 
         public void DatabaseUpdate()
@@ -102,7 +102,7 @@ namespace Denis.UserList.BLL.Core
         {
             try
             {
-                var user = userDAO.GetAllUsers().First(x => x.ID == userID);
+                var user = userDAO.GetAllUsers().First(x => x.Id == userID);
                 user.AddAwards(awardLogic.GetUserAwards(userID));
                 userCache.Add(userID, user);
             }
@@ -118,8 +118,8 @@ namespace Denis.UserList.BLL.Core
             {
                 foreach (var user in userDAO.GetAllUsers())
                 {
-                    user.AddAwards(awardLogic.GetUserAwards(user.ID));
-                    userCache.Add(user.ID, user);
+                    user.AddAwards(awardLogic.GetUserAwards(user.Id));
+                    userCache.Add(user.Id, user);
                 }
                 isCacheActual = true;
             }
@@ -147,6 +147,11 @@ namespace Denis.UserList.BLL.Core
             return string.IsNullOrEmpty(name) || 
                    birthDate >= DateTime.Now || 
                    DateTimeAdditional.CompleteYearDifference(birthDate, DateTime.Now) > maxAge;
+        }
+
+        public void Add(User user)
+        {
+            Add(user.Name, user.BirthDate);
         }
     }
 }

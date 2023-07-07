@@ -2,12 +2,12 @@
 {
     public class Award
     {
-        public int ID { get; set; }
-        public string Title { get; private set; }
+        public int Id { get; set; }
+        public string Title { get; set; }
 
         public Award(int id, string title)
         {
-            ID = id;
+            Id = id;
             Title = title;
         }
     }

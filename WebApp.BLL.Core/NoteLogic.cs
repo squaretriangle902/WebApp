@@ -15,14 +15,20 @@ namespace WebApp.BLL.Core
         {
             notes = new List<Note>
             {
-                new Note{ Id = Guid.NewGuid(), CreationDate = DateTime.Now, Text = "note1" },
-                new Note{ Id = Guid.NewGuid(), CreationDate = DateTime.Now, Text = "note1" },
-                new Note{ Id = Guid.NewGuid(), CreationDate = DateTime.Now, Text = "note1" },
-                new Note{ Id = Guid.NewGuid(), CreationDate = DateTime.Now, Text = "note1" },
-                new Note{ Id = Guid.NewGuid(), CreationDate = DateTime.Now, Text = "note1" },
-                new Note{ Id = Guid.NewGuid(), CreationDate = DateTime.Now, Text = "note1" },
-                new Note{ Id = Guid.NewGuid(), CreationDate = DateTime.Now, Text = "note1" },
+                new Note{ CreationDate = DateTime.Now, Text = "note1" },
+                new Note{ CreationDate = DateTime.Now, Text = "note1" },
+                new Note{ CreationDate = DateTime.Now, Text = "note1" },
+                new Note{ CreationDate = DateTime.Now, Text = "note1" },
+                new Note{ CreationDate = DateTime.Now, Text = "note1" },
+                new Note{ CreationDate = DateTime.Now, Text = "note1" },
+                new Note{ CreationDate = DateTime.Now, Text = "note1" },
             };
+        }
+
+        public void Add(Note note)
+        {
+            note.CreationDate = DateTime.Now;
+            notes.Add(note);
         }
 
         public IEnumerable<Note> GetAll()

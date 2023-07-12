@@ -1,6 +1,7 @@
 ﻿using Denis.UserList.Common.Libraries;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Denis.UserList.Common.Entities
 {
@@ -10,11 +11,13 @@ namespace Denis.UserList.Common.Entities
 
         public int Id { get; set; }
 
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
-        public DateTime BirthDate { get; private set; }
+        public DateTime BirthDate { get; set; }
 
         public int Age => DateTimeAdditional.CompleteYearDifference(BirthDate, DateTime.Now);
+
+        public byte[] Image { get; set; }
 
         public User(int id, string name, DateTime birthDate)
         {
@@ -22,11 +25,17 @@ namespace Denis.UserList.Common.Entities
             Name = name;
             BirthDate = birthDate;
             awards = new HashSet<Award>();
+            Image = null;
         }
 
         public bool AddAward(Award award) 
         {
             return awards.Add(award);
+        }
+
+        public bool RemoveAward(Award award)
+        {
+           return awards.Remove(award);
         }
 
         public void AddAwards(IEnumerable<Award> awards)

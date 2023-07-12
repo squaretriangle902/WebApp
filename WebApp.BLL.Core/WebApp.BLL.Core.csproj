@@ -44,7 +44,6 @@
     <Compile Include="AwardLogic.cs" />
     <Compile Include="BLLException.cs" />
     <Compile Include="Common.cs" />
-    <Compile Include="NoteLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserLogic.cs" />
   </ItemGroup>

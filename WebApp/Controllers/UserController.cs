@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -16,9 +18,9 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-        public ActionResult Get(int id)
+        public ActionResult Get(int userId)
         {
-            var model = UserWithAwardsModel.GetUser(id);
+            var model = UserWithAwardsModel.GetUser(userId);
             return View(model);
         }
 
@@ -28,16 +30,64 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(UserModel userModel)
+        public ActionResult Add([Bind(Include = "Id,Image,Name,BirthDate,Age")]UserModel userModel)
         {
-            UserModel.Add(userModel);
+            try
+            {
+                UserModel.Add(userModel);
+                return RedirectToAction("Index");
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Add");
+            }
+        }
+
+        public ActionResult Edit(int userId)
+        {
+            var model = UserModel.GetUser(userId);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(UserModel userModel)
+        {
+            UserModel.Edit(userModel);
             return RedirectToAction("Index");
         }
 
-        public ActionResult Remove(int id)
+        public ActionResult Remove(int userId)
         {
-            UserModel.Remove(id);
+            UserModel.Remove(userId);
             return RedirectToAction("Index");
+        }
+
+        public ActionResult RemoveAward(int userId, int awardId)
+        {
+            UserWithAwardsModel.RemoveAward(userId, awardId);
+            return RedirectToAction("GetAvailableAwards", new {userId = userId});
+        }
+
+        public ActionResult AddAward(int userId, int awardId)
+        {
+            UserWithAwardsModel.AddAward(userId, awardId);
+            return RedirectToAction("GetAvailableAwards", new { userId = userId });
+        }
+
+        public ActionResult GetAvailableAwards(int userId)
+        {
+            var model = new AddAwardsModel(userId);
+            return View(model);
+        }
+
+        public ActionResult GetImage(int userId) 
+        {
+            var image = UserModel.GetImage(userId);
+            if (image is null)
+            {
+                return File("~/Content/deafultUserImage.png", "image/png");
+            }
+            return File(image, "image/png");
         }
     }
 }

@@ -104,6 +104,8 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\defaultAwardImage.png" />
+    <Content Include="Content\defaultUserImage.png" />
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -123,14 +125,13 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AwardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\NoteController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AddAwardsModel.cs" />
     <Compile Include="Models\AwardModel.cs" />
     <Compile Include="Models\Logic.cs" />
-    <Compile Include="Models\NoteModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Models\UserWithAwardsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -157,7 +158,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Note\Index.cshtml" />
     <Content Include="Scripts\bootstrap.min.js.map" />
     <Content Include="Scripts\bootstrap.js.map" />
     <Content Include="Scripts\bootstrap.esm.min.js.map" />
@@ -170,8 +170,10 @@
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\User\Get.cshtml" />
     <Content Include="Views\Award\Index.cshtml" />
-    <Content Include="Views\Note\Add.cshtml" />
     <Content Include="Views\Award\Add.cshtml" />
+    <Content Include="Views\User\AddAward.cshtml" />
+    <Content Include="Views\User\GetAvailableAwards.cshtml" />
+    <Content Include="Views\User\Edit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

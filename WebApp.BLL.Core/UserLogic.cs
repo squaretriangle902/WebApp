@@ -153,5 +153,20 @@ namespace Denis.UserList.BLL.Core
         {
             Add(user.Name, user.BirthDate);
         }
+
+        public void RemoveAward(int userId, int awardId)
+        {
+            GetUserInternal(userId).RemoveAward(awardLogic.GetAward(awardId));
+        }
+
+        public byte[] GetImage(int userId)
+        {
+            return GetUserInternal(userId).Image;
+        }
+
+        public void SetImage(int userId, byte[] image)
+        {
+            GetUserInternal(userId).Image = image;
+        }
     }
 }

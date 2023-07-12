@@ -4,10 +4,10 @@
     ViewBag.Title = "Add";
 }
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm("Add", "Award", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Создание награды</h4>
         <hr />
@@ -22,12 +22,9 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="file" name="Image" />
+                <input type="submit" value="Create" class="btn btn-success" />
             </div>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

@@ -16,7 +16,7 @@ namespace Denis.UserList.BLL.Core
 
         public AwardLogic()
         {
-            awardCache = new Dictionary<int, Award>();  
+            awardCache = new Dictionary<int, Award>();
             switch (Common.ReadConfigFile("award_database"))
             {
                 case "awardDAO":
@@ -116,6 +116,16 @@ namespace Denis.UserList.BLL.Core
         public void AddAward(Award award)
         {
             AddAward(award.Title);
+        }
+
+        public byte[] GetImage(int awardId)
+        {
+            return GetAwardInternal(awardId).Image;
+        }
+
+        public void SetImage(int awardId, byte[] image)
+        {
+            GetAwardInternal(awardId).Image = image;
         }
     }
 }

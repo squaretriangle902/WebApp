@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Denis.UserList.Common.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -22,11 +23,16 @@ namespace WebApp.Controllers
             return View();
         }
 
-        [HttpPost]
-        public ActionResult Add(AwardModel awardModel)
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Add([Bind(Include = "Title,Image")]AwardModel awardModel)
         {
             AwardModel.Add(awardModel);
             return RedirectToAction("Index");
+        }
+
+        public ActionResult GetImage(int awardId)
+        {
+            return File(AwardModel.GetImage(awardId), "image/png");
         }
     }
 }

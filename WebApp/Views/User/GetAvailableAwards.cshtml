@@ -1,0 +1,52 @@
+﻿@model WebApp.Models.AddAwardsModel
+
+@{
+    ViewBag.Title = "GetAvailableAwards";
+}
+
+<h2>Награды пользователя</h2>
+<table class="table table-hover table-bordered">
+    <tr>
+        <th>
+            Название
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.UserAwards)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.ActionLink("Удалить", "RemoveAward", new { userId = Model.UserId, awardId = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<h2>Доступные награды</h2>
+<table class="table table-hover table-bordered">
+    <tr>
+        <th>
+            Название
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.AvailableAwards)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.ActionLink("Добавить", "AddAward", new { userId = Model.UserId, awardId = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>
+

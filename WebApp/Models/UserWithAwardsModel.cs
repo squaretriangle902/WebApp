@@ -46,5 +46,15 @@ namespace WebApp.Models
                 Title = award.Title
             }).ToList();
         }
+
+        public static void RemoveAward(int userId, int awardId)
+        {
+            Logic.UserLogic.RemoveAward(userId, awardId);
+        }
+
+        public static void AddAward(int userId, int awardId)
+        {
+            Logic.UserLogic.AddUserAward(userId, awardId);
+        }
     }
 }

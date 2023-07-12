@@ -9,7 +9,7 @@
 <p>
     @Html.ActionLink("Добавить пользователя", "Add")
 </p>
-<table class="table table-hover">
+<table class="table table-hover table-bordered">
     <tr>
         <th>
             Имя
@@ -21,10 +21,15 @@
             Возраст
         </th>
         <th></th>
+        <th></th>
+        <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
+        <td>
+            <img src="@Url.Action("GetImage", new {userId = item.Id})"/>
+        </td>
         <td>
             @Html.DisplayFor(modelItem => item.Name)
         </td>
@@ -35,9 +40,13 @@
             @Html.DisplayFor(modelItem => item.Age)
         </td>
         <td>
-            @Html.ActionLink("Подробнее", "Get", new { id = item.Id }) |
-            @Html.ActionLink("Изменить", "Update", new { id = item.Id }) |
-            @Html.ActionLink("Удалить", "Remove", new { id = item.Id })
+            @Html.ActionLink("Подробнее", "Get", new { userId = item.Id })
+        </td>
+        <td>
+            @Html.ActionLink("Редактировать", "Edit", new { userId = item.Id })
+        </td>
+        <td>
+            @Html.ActionLink("Удалить", "Remove", new { userId = item.Id })
         </td>
     </tr>
 }

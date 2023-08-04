@@ -113,9 +113,20 @@ namespace Denis.UserList.BLL.Core
             }
         }
 
-        public void AddAward(Award award)
+        public int AddAward(Award award)
         {
-            AddAward(award.Title);
+            if (!IsValid(award))
+            {
+                throw new ArgumentException("award is not valid");
+            }
+            award.Id = ++maxAwardID;
+            awardCache.Add(award.Id, award);
+            return award.Id;
+        }
+
+        private bool IsValid(Award award)
+        {
+            return !string.IsNullOrEmpty(award.Title);
         }
 
         public byte[] GetImage(int awardId)

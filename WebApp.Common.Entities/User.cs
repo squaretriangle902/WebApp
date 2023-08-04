@@ -19,13 +19,19 @@ namespace Denis.UserList.Common.Entities
 
         public byte[] Image { get; set; }
 
+        public User()
+        {
+            awards = new HashSet<Award>();
+            Image = new byte[0];
+        }
+
         public User(int id, string name, DateTime birthDate)
         {
             Id = id;
             Name = name;
             BirthDate = birthDate;
             awards = new HashSet<Award>();
-            Image = null;
+            Image = new byte[0];
         }
 
         public bool AddAward(Award award) 

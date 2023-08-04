@@ -9,6 +9,9 @@ namespace WebApp.Models
 {
     public class UserModel
     {
+        const int ImageResizeWidth = 100;
+        const int ImageResizeHeight = 100;
+
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -38,12 +41,14 @@ namespace WebApp.Models
 
         public static void Add(UserModel userModel)
         {
-            var bytes = new byte[userModel.Image.ContentLength];
-            userModel.Image.InputStream.Read(bytes, 0, bytes.Length);
-
-            var user = new User(0, userModel.Name, userModel.BirthDate);
+            var user = new User()
+            { 
+                Id = 0,
+                Name = userModel.Name,
+                BirthDate = userModel.BirthDate,
+                Image = Common.ImageToBytes(userModel.Image)
+            };
             Logic.UserLogic.Add(user);
-            Logic.UserLogic.SetImage(userModel.Id, bytes);
         }
 
         public static void Edit(UserModel userModel)
@@ -59,10 +64,21 @@ namespace WebApp.Models
             return new UserModel { Id = user.Id, Name = user.Name, BirthDate = user.BirthDate, Age = user.Age };
         }
 
-        public static byte[] GetImage(int userId)
+        public static byte[] GetImage(int awardId)
         {
-            return Logic.UserLogic.GetImage(userId);
+            var image = Logic.UserLogic.GetImage(awardId);
+            if (image.Length != 0)
+            {
+                return Common.ResizeImage(image, ImageResizeWidth, ImageResizeHeight);
+            }
+            return Common.ResizeImage(GetDefaultImage(), 100, 100);
         }
+
+        private static System.Drawing.Image GetDefaultImage()
+        {
+            return System.Drawing.Image.FromFile(@"C:\Users\squar\source\repos\WebApp\WebApp\Content\defaultUserImage.png");
+        }
+
     }
 }
 

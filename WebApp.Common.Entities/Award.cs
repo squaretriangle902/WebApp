@@ -8,6 +8,10 @@ namespace Denis.UserList.Common.Entities
         public string Title { get; set; }
         public byte[] Image { get; set; }
 
+        public Award()
+        {
+        }
+
         public Award(int id, string title)
         {
             Id = id;

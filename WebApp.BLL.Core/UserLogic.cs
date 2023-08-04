@@ -5,6 +5,7 @@ using Denis.UserList.DAL.File;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Denis.UserList.BLL.Core
 {
@@ -142,16 +143,16 @@ namespace Denis.UserList.BLL.Core
             return user;
         }
 
-        private static bool IsUserValid(string name, DateTime birthDate)
-        {
-            return string.IsNullOrEmpty(name) || 
-                   birthDate >= DateTime.Now || 
-                   DateTimeAdditional.CompleteYearDifference(birthDate, DateTime.Now) > maxAge;
-        }
 
-        public void Add(User user)
+        public int Add(User user)
         {
-            Add(user.Name, user.BirthDate);
+            if (IsUserInvalid(user))
+            {
+                throw new BLLException("User is invalid");
+            }
+            user.Id = ++maxID;
+            userCache.Add(user.Id, user);
+            return maxID;
         }
 
         public void RemoveAward(int userId, int awardId)
@@ -167,6 +168,20 @@ namespace Denis.UserList.BLL.Core
         public void SetImage(int userId, byte[] image)
         {
             GetUserInternal(userId).Image = image;
+        }
+
+        private static bool IsUserValid(string name, DateTime birthDate)
+        {
+            return string.IsNullOrEmpty(name) || 
+                   birthDate >= DateTime.Now || 
+                   DateTimeAdditional.CompleteYearDifference(birthDate, DateTime.Now) > maxAge;
+        }
+
+        private static bool IsUserInvalid(User user)
+        {
+            return string.IsNullOrEmpty(user.Name) ||
+                   user.BirthDate >= DateTime.Now ||
+                   DateTimeAdditional.CompleteYearDifference(user.BirthDate, DateTime.Now) > maxAge;
         }
     }
 }

@@ -131,6 +131,7 @@
     </Compile>
     <Compile Include="Models\AddAwardsModel.cs" />
     <Compile Include="Models\AwardModel.cs" />
+    <Compile Include="Models\Common.cs" />
     <Compile Include="Models\Logic.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Models\UserWithAwardsModel.cs" />

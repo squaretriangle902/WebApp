@@ -4,10 +4,11 @@
     ViewBag.Title = "Add";
 }
 
-@using (Html.BeginForm()) 
+
+@using (Html.BeginForm("Add", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-group">
         <h4>Добавление пользователя</h4>
         <hr />
@@ -31,6 +32,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
+                <input type="file" name="Image" />
                 <input type="submit" value="Добавить" class="btn btn-success" />
             </div>
         </div>

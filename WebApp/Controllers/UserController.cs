@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Denis.UserList.Common.Entities;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -71,7 +72,7 @@ namespace WebApp.Controllers
         public ActionResult AddAward(int userId, int awardId)
         {
             UserWithAwardsModel.AddAward(userId, awardId);
-            return RedirectToAction("GetAvailableAwards", new { userId = userId });
+            return RedirectToAction("GetAvailableAwards", new { userId });
         }
 
         public ActionResult GetAvailableAwards(int userId)
@@ -82,12 +83,7 @@ namespace WebApp.Controllers
 
         public ActionResult GetImage(int userId) 
         {
-            var image = UserModel.GetImage(userId);
-            if (image is null)
-            {
-                return File("~/Content/deafultUserImage.png", "image/png");
-            }
-            return File(image, "image/png");
+            return File(UserModel.GetImage(userId), "image/png");
         }
     }
 }

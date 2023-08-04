@@ -12,6 +12,9 @@
 <table class="table table-hover table-bordered">
     <tr>
         <th>
+            Изображение
+        </th>
+        <th>
             Название
         </th>
     </tr>
@@ -20,7 +23,7 @@
 {
     <tr>
         <td>
-            <img src="@Url.Action("GetImage", new {awardId = item.Id})" onerror="~/Content/defaultAwardImage.png" />
+            <img src="@Url.Action("GetImage", new {awardId = item.Id})"/>
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Title)

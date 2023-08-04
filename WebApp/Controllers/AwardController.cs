@@ -1,9 +1,12 @@
 ﻿using Denis.UserList.Common.Entities;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using WebApp.Models;
 
@@ -11,7 +14,6 @@ namespace WebApp.Controllers
 {
     public class AwardController : Controller
     {
-        // GET: Award
         public ActionResult Index()
         {
             var model = AwardModel.GetAll().ToList();

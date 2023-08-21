@@ -132,7 +132,6 @@
     <Compile Include="Models\AddAwardsModel.cs" />
     <Compile Include="Models\AwardModel.cs" />
     <Compile Include="Models\Common.cs" />
-    <Compile Include="Models\Logic.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Models\UserWithAwardsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -169,12 +168,13 @@
     <Content Include="Scripts\jquery-3.7.0.min.map" />
     <Content Include="Views\User\Add.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
-    <Content Include="Views\User\Get.cshtml" />
+    <Content Include="Views\User\Details.cshtml" />
     <Content Include="Views\Award\Index.cshtml" />
     <Content Include="Views\Award\Add.cshtml" />
     <Content Include="Views\User\AddAward.cshtml" />
     <Content Include="Views\User\GetAvailableAwards.cshtml" />
-    <Content Include="Views\User\Edit.cshtml" />
+    <Content Include="Views\User\Update.cshtml" />
+    <Content Include="Views\Award\Update.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -193,6 +193,10 @@
     <ProjectReference Include="..\WebApp.BLL.Interfaces\WebApp.BLL.Interfaces.csproj">
       <Project>{b669c036-b36f-4614-babc-38bf003d19cd}</Project>
       <Name>WebApp.BLL.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebApp.Common.Configuration\WebApp.Common.Configuration.csproj">
+      <Project>{6E04A914-DD1A-42FF-9FCE-A399802E72BD}</Project>
+      <Name>WebApp.Common.Configuration</Name>
     </ProjectReference>
     <ProjectReference Include="..\WebApp.Common.Entities\WebApp.Common.Entities.csproj">
       <Project>{f8167c4d-1307-496c-85da-7abb7076eb6c}</Project>

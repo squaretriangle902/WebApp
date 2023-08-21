@@ -1,4 +1,4 @@
-﻿using Denis.UserList.Common.Entities;
+﻿using WebApp.Common.Entities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,14 +12,13 @@ namespace WebApp.Controllers
 {
     public class UserController : Controller
     {
-        // GET: User
         public ActionResult Index()
         {
-            var model = UserModel.GetAll().ToList();
+            var model = UserModel.GetAllUsers().ToList();
             return View(model);
         }
 
-        public ActionResult Get(int userId)
+        public ActionResult Details(int userId)
         {
             var model = UserWithAwardsModel.GetUser(userId);
             return View(model);
@@ -30,12 +29,12 @@ namespace WebApp.Controllers
             return View();
         }
 
-        [HttpPost]
-        public ActionResult Add([Bind(Include = "Id,Image,Name,BirthDate,Age")]UserModel userModel)
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Add([Bind(Include = "Id,Image,Name,BirthDate,ImageId,Age")] UserModel userModel)
         {
             try
             {
-                UserModel.Add(userModel);
+                UserModel.AddUser(userModel);
                 return RedirectToAction("Index");
             }
             catch (Exception)
@@ -44,29 +43,29 @@ namespace WebApp.Controllers
             }
         }
 
-        public ActionResult Edit(int userId)
+        public ActionResult Update(int userId)
         {
             var model = UserModel.GetUser(userId);
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult Edit(UserModel userModel)
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Update([Bind(Include = "Id,Image,Name,BirthDate,ImageId,Age")] UserModel userModel)
         {
-            UserModel.Edit(userModel);
+            UserModel.Update(userModel);
             return RedirectToAction("Index");
         }
 
         public ActionResult Remove(int userId)
         {
-            UserModel.Remove(userId);
+            UserModel.DeleteUser(userId);
             return RedirectToAction("Index");
         }
 
         public ActionResult RemoveAward(int userId, int awardId)
         {
             UserWithAwardsModel.RemoveAward(userId, awardId);
-            return RedirectToAction("GetAvailableAwards", new {userId = userId});
+            return RedirectToAction("GetAvailableAwards", new { userId });
         }
 
         public ActionResult AddAward(int userId, int awardId)
@@ -81,9 +80,14 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-        public ActionResult GetImage(int userId) 
+        public ActionResult GetImage(int? imageId) 
         {
-            return File(UserModel.GetImage(userId), "image/png");
+            var image = UserModel.GetImage(imageId);
+            if (image is null)
+            {
+                return File(@"C:\Users\squar\source\repos\WebApp\WebApp\Content\defaultUserImage.png", "image/png");
+            }
+            return File(image, "image/png");
         }
     }
 }

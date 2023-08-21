@@ -1,14 +1,16 @@
-﻿using Denis.UserList.Common.Entities;
+﻿using WebApp.Common.Entities;
 using System.Collections.Generic;
 
-namespace Denis.UserList.DAL.Fake
+namespace WebApp.DAL.Interfaces
 {
-    public interface IUserDAO
+    public interface IUserDao
     {
-        int MaxUserID { get; }
-        void AddUserAwards(IEnumerable<User> users);
         IEnumerable<User> GetAllUsers();
-        void AddUsers(IEnumerable<User> users);
-        void DeleteUser(int userID);
+        int AddUser(User user);
+        User GetUser(int userId);
+        void DeleteUser(int userId);
+        void UpdateUser(User user);
+        void AddUserAward(int userId, int awardId);
+        void DeleteUserAward(int userId, int awardId);
     }
 }

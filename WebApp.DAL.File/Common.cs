@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Denis.UserList.DAL.File
+namespace WebApp.DAL.File
 {
     public static class Common
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Denis.UserList.BLL.Core
+namespace WebApp.BLL.Core
 {
     internal class BLLException : Exception
     {

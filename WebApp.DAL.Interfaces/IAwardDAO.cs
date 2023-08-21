@@ -1,14 +1,15 @@
-﻿using Denis.UserList.Common.Entities;
+﻿using WebApp.Common.Entities;
 using System.Collections.Generic;
 
-namespace Denis.UserList.DAL.File
+namespace WebApp.DAL.Interfaces
 {
-    public interface IAwardDAO
+    public interface IAwardDao
     {
-        int MaxAwardID { get; }
         IEnumerable<Award> GetAllAwards();
-        IEnumerable<Award> GetUserAwards(int userID);
+        IEnumerable<Award> GetUserAwards(int userId);
         int AddAward(Award award);
-        void AddAwards(IEnumerable<Award> awards);
+        Award GetAward(int awardId);
+        void DeleteAward(int awardId);
+        void UpdateAward(Award award);
     }
 }

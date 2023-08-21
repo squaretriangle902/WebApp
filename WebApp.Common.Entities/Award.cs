@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace Denis.UserList.Common.Entities
+namespace WebApp.Common.Entities
 {
     public class Award
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public byte[] Image { get; set; }
+        public int? ImageId { get; set; }
 
         public Award()
         {
@@ -16,7 +16,7 @@ namespace Denis.UserList.Common.Entities
         {
             Id = id;
             Title = title;
-            Image = null;
+            ImageId = null;
         }
 
         public override int GetHashCode() 

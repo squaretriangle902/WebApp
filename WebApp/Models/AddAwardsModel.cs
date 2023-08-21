@@ -1,52 +1,17 @@
-﻿using Denis.UserList.Common.Entities;
+﻿using WebApp.Common.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using WebApp.Common.Configuration;
 
 namespace WebApp.Models
 {
     public class AddAwardsModel
     {
-        private List<AwardModel> userAwards;
-        private List<AwardModel> availableAwards;
-        private int userId;
-
-        public List<AwardModel> UserAwards 
-        {
-            get
-            {
-                return userAwards;
-            }
-            private set
-            {
-                userAwards = value;
-            }
-        }
-
-        public List<AwardModel> AvailableAwards
-        {
-            get
-            {
-                return availableAwards;
-            }
-            private set
-            {
-                availableAwards = value;
-            }
-        }
-
-        public int UserId 
-        { 
-            get
-            {
-                return userId;
-            }
-            private set
-            {
-                userId = value;
-            }
-        }
+        public int UserId { get; private set; }
+        public List<AwardModel> AvailableAwards { get; private set; }
+        public List<AwardModel> UserAwards { get; private set; }
 
         public AddAwardsModel(int userId)
         {
@@ -57,20 +22,15 @@ namespace WebApp.Models
 
         private static List<AwardModel> InitializeUserAwards(int userId)
         {
-            return Logic.UserLogic.GetUserAwards(userId).Select(award => new AwardModel
-            {
-                Id = award.Id,
-                Title = award.Title,
-            }).ToList();
+            return Startup.UserLogic.GetUserAwards(userId).
+                Select(award => Common.ConvertToModel(award)).ToList();
         }
 
         private static List<AwardModel> InitializeAvailableAwards(int userId)
         {
-            return Logic.AwardLogic.GetAllAwards().Except(Logic.UserLogic.GetUserAwards(userId)).Select(award => new AwardModel
-            {
-                Id = award.Id,
-                Title = award.Title,
-            }).ToList();
+            return Startup.AwardLogic.GetAllAwards().
+                Except(Startup.UserLogic.GetUserAwards(userId)).
+                Select(award => Common.ConvertToModel(award)).ToList();
         }
     }
 }

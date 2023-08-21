@@ -1,77 +1,63 @@
-﻿using Denis.UserList.Common.Entities;
+﻿using WebApp.Common.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using WebApp.Common.Configuration;
 
 namespace WebApp.Models
 {
     public class UserModel
     {
-        const int ImageResizeWidth = 100;
-        const int ImageResizeHeight = 100;
-
         public int Id { get; set; }
-
         public string Name { get; set; }
 
-        [DataType(DataType.Date)]
+
+        //[DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime BirthDate { get; set; }
-
-        public int Age;
-
+        public int Age { get; set; }
+        public int? ImageId { get; set; }
         public HttpPostedFileBase Image { get; set; }
 
-        public static IEnumerable<UserModel> GetAll()
+        public static IEnumerable<UserModel> GetAllUsers()
         {
-            return Logic.UserLogic.GetAllUsers().Select(user => new UserModel
+            return Startup.UserLogic.GetAllUsers().Select(user => Common.ConvertToModel(user)).
+                OrderBy(userModel => userModel.Name);
+        }
+
+        public static void DeleteUser(int userId)
+        {
+            Startup.UserLogic.DeleteUser(userId);
+        }
+
+        public static void AddUser(UserModel userModel)
+        {
+            var user = Common.ConvertToEntity(userModel);
+            if (!(userModel.Image is null))
             {
-                Id = user.Id, 
-                Name = user.Name, 
-                BirthDate = user.BirthDate, 
-                Age = user.Age
-            }).OrderBy(user => user.Name);
+                var image = System.Drawing.Image.FromStream(userModel.Image.InputStream, true, true);
+                Startup.UserLogic.SetImage(user, image);
+            }
+            Startup.UserLogic.AddUser(user);
         }
 
-        public static void Remove(int id)
+        public static void Update(UserModel userModel)
         {
-            Logic.UserLogic.DeleteUser(id);
-        }
-
-        public static void Add(UserModel userModel)
-        {
-            var user = new User()
-            { 
-                Id = 0,
-                Name = userModel.Name,
-                BirthDate = userModel.BirthDate,
-                Image = Common.ImageToBytes(userModel.Image)
-            };
-            Logic.UserLogic.Add(user);
-        }
-
-        public static void Edit(UserModel userModel)
-        {
-            var user = Logic.UserLogic.GetUser(userModel.Id);
-            user.BirthDate = userModel.BirthDate;
-            user.Name = userModel.Name;
+            var user = Common.ConvertToEntity(userModel);
+            if (!(userModel.Image is null))
+            {
+                var image = System.Drawing.Image.FromStream(userModel.Image.InputStream, true, true);
+                Startup.UserLogic.SetImage(user, image);
+            }
+            Startup.UserLogic.UpdateUser(user);
         }
 
         public static UserModel GetUser(int userId)
         {
-            var user = Logic.UserLogic.GetUser(userId);
-            return new UserModel { Id = user.Id, Name = user.Name, BirthDate = user.BirthDate, Age = user.Age };
-        }
-
-        public static byte[] GetImage(int awardId)
-        {
-            var image = Logic.UserLogic.GetImage(awardId);
-            if (image.Length != 0)
-            {
-                return Common.ResizeImage(image, ImageResizeWidth, ImageResizeHeight);
-            }
-            return Common.ResizeImage(GetDefaultImage(), 100, 100);
+            var user = Startup.UserLogic.GetUser(userId);
+            return Common.ConvertToModel(user);
         }
 
         private static System.Drawing.Image GetDefaultImage()
@@ -79,6 +65,20 @@ namespace WebApp.Models
             return System.Drawing.Image.FromFile(@"C:\Users\squar\source\repos\WebApp\WebApp\Content\defaultUserImage.png");
         }
 
+        public static byte[] GetImage(int? imageId)
+        {
+            if (imageId is int imageIdValue)
+            {
+                using (var image = Startup.UserLogic.GetImage(
+                    imageIdValue,
+                    Constants.UserImageResizeWidth,
+                    Constants.UserImageResizeHeight))
+                {
+                    return Common.ConvertToBytes(image);
+                }
+            }
+            return null;
+        }
     }
 }
 

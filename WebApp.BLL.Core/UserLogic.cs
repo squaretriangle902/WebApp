@@ -1,128 +1,35 @@
-﻿using Denis.UserList.Common.Entities;
-using Denis.UserList.Common.Libraries;
-using Denis.UserList.DAL.Fake;
-using Denis.UserList.DAL.File;
+﻿using WebApp.Common.Entities;
+using WebApp.Common.Libraries;
+using WebApp.DAL.Interfaces;
+using WebApp.DAL.File;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
+using WebApp.BLL.Interfaces;
+using WebApp.DAL.SQL;
+using System.Drawing;
 
-namespace Denis.UserList.BLL.Core
+namespace WebApp.BLL.Core
 {
     public class UserLogic : IUserLogic
     {
-        private const int maxAge = 150;
+        private const int MaxAge = 150;
 
-        private readonly IUserDAO userDAO;
+        private readonly IUserDao userDao;
         private readonly IAwardLogic awardLogic;
-        private readonly Dictionary<int, User> userCache;
-        private bool isCacheActual;
-        private int maxID;
+        private readonly IImageLogic imageLogic;
 
-        public UserLogic(IAwardLogic awardLogic)
+        public UserLogic(IAwardLogic awardLogic, IUserDao userDao, IImageLogic imageLogic)
         {
-            userCache = new Dictionary<int, User>();
-            isCacheActual = false;
-            switch (Common.ReadConfigFile("user_database"))
-            {
-                case "userDAO":
-                    userDAO = new FileUserDAO(awardLogic.AwardDAO);
-                    break;
-                default:
-                    throw new BLLException("Cannot get user database");
-            }
             this.awardLogic = awardLogic;
-            maxID = userDAO.MaxUserID;
+            this.userDao = userDao;
+            this.imageLogic = imageLogic;
         }
-
-        public void DeleteUser(int userID)
-        {
-            if (userCache.Remove(userID))
-            {
-                return;
-            }
-            try
-            {
-                userDAO.DeleteUser(userID);
-            }
-            catch (Exception exception)
-            {
-                throw new BLLException("Cannot delete user", exception);
-            }
-        }
-
         public IEnumerable<User> GetAllUsers()
         {
-            if (!isCacheActual)
-            {
-                CacheAddAllUsers();
-            }
-            foreach (var user in userCache.Values)
-            {
-                yield return user;
-            }
-        }
-
-        public User GetUser(int userID)
-        {
-            return GetUserInternal(userID);
-        }
-
-        public IEnumerable<Award> GetUserAwards(int userID)
-        {
-            foreach (var award in GetUserInternal(userID).GetAwards())
-            {
-                yield return award;
-            }
-        }
-
-        public int Add(string name, DateTime birthDate)
-        {
-            if (IsUserValid(name, birthDate))
-            {
-                throw new BLLException("Incorrect user state");
-            }
-            userCache.Add(++maxID, new User(maxID, name, birthDate));
-            return maxID;
-        }
-
-        public void AddUserAward(int userId, int awardId)
-        {
-            GetUserInternal(userId).AddAward(awardLogic.GetAward(awardId));
-        }
-
-        public void DatabaseUpdate()
-        {
-            awardLogic.DatabaseUpdate();
-            var users = userCache.Values;
-            userDAO.AddUsers(users);
-            userDAO.AddUserAwards(users);
-        }
-
-        private void CacheAddUser(int userID)
-        {
             try
             {
-                var user = userDAO.GetAllUsers().First(x => x.Id == userID);
-                user.AddAwards(awardLogic.GetUserAwards(userID));
-                userCache.Add(userID, user);
-            }
-            catch (Exception exception)
-            {
-                throw new BLLException("Cannot find user by ID", exception);
-            }
-        }
-
-        private void CacheAddAllUsers()
-        {
-            try
-            {
-                foreach (var user in userDAO.GetAllUsers())
-                {
-                    user.AddAwards(awardLogic.GetUserAwards(user.Id));
-                    userCache.Add(user.Id, user);
-                }
-                isCacheActual = true;
+                return userDao.GetAllUsers();
             }
             catch (Exception exception)
             {
@@ -130,58 +37,115 @@ namespace Denis.UserList.BLL.Core
             }
         }
 
-        private User GetUserInternal(int userID)
+        public User GetUser(int userId)
         {
-            if (!userCache.ContainsKey(userID))
+            try
             {
-                CacheAddUser(userID);
+                return userDao.GetUser(userId);
             }
-            if (!userCache.TryGetValue(userID, out User user) || user is null)
+            catch (Exception exception)
             {
-                throw new BLLException("Cannot find user by ID");
+                throw new BLLException("Cannot get user by ID", exception);
             }
-            return user;
         }
 
+        public IEnumerable<Award> GetUserAwards(int userId)
+        {
+            try
+            {
+                return awardLogic.GetUserAwards(userId);
+            }
+            catch (Exception exception)
+            {
+                throw new BLLException("Cannot get award by user ID", exception);
+            }
+        }
 
-        public int Add(User user)
+        public void AddUserAward(int userId, int awardId)
+        {
+            try
+            {
+                userDao.AddUserAward(userId, awardId);
+            }
+            catch (Exception exception)
+            {
+                throw new BLLException("Cannot add award to user", exception);
+            }
+        }
+
+        public void DeleteUser(int userId)
+        {
+            try
+            {
+                userDao.DeleteUser(userId);
+            }
+            catch (Exception exception)
+            {
+                throw new BLLException("Cannot delete user", exception);
+            }
+        }
+
+        public int AddUser(User user)
         {
             if (IsUserInvalid(user))
             {
                 throw new BLLException("User is invalid");
             }
-            user.Id = ++maxID;
-            userCache.Add(user.Id, user);
-            return maxID;
+            try
+            {
+                var userId = userDao.AddUser(user);
+                return userId;
+            }
+            catch (Exception exception)
+            {
+                throw new BLLException("Cannot add user", exception);
+            }
         }
 
-        public void RemoveAward(int userId, int awardId)
+        public void DeleteUserAward(int userId, int awardId)
         {
-            GetUserInternal(userId).RemoveAward(awardLogic.GetAward(awardId));
+            try
+            {
+                userDao.DeleteUserAward(userId, awardId);
+            }
+            catch (Exception exception)
+            {
+                throw new BLLException("Cannot remove award from user", exception);
+            }
+        }
+        public void UpdateUser(User user)
+        {
+            try
+            {
+                userDao.UpdateUser(user);
+            }
+            catch (Exception exception)
+            {
+                throw new BLLException("Cannot update user", exception);
+            }
         }
 
-        public byte[] GetImage(int userId)
+        public Image GetImage(int imageId, int width, int height)
         {
-            return GetUserInternal(userId).Image;
+            return imageLogic.GetImage(imageId, width, height);
         }
 
-        public void SetImage(int userId, byte[] image)
+        public void SetImage(User user, Image image)
         {
-            GetUserInternal(userId).Image = image;
-        }
-
-        private static bool IsUserValid(string name, DateTime birthDate)
-        {
-            return string.IsNullOrEmpty(name) || 
-                   birthDate >= DateTime.Now || 
-                   DateTimeAdditional.CompleteYearDifference(birthDate, DateTime.Now) > maxAge;
+            if (user.ImageId is int imageId)
+            {
+                imageLogic.UpdateImage(image, imageId);
+                return;
+            }
+            user.ImageId = imageLogic.SaveImage(image);
         }
 
         private static bool IsUserInvalid(User user)
         {
             return string.IsNullOrEmpty(user.Name) ||
                    user.BirthDate >= DateTime.Now ||
-                   DateTimeAdditional.CompleteYearDifference(user.BirthDate, DateTime.Now) > maxAge;
+                   DateTimeAdditional.CompleteYearDifference(user.BirthDate, DateTime.Now) > MaxAge;
         }
+
     }
 }

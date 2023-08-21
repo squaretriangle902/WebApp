@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace Denis.UserList.BLL.Core
+namespace WebApp.BLL.Core
 {
     public static class Common
     {

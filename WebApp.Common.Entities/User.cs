@@ -1,9 +1,10 @@
-﻿using Denis.UserList.Common.Libraries;
+﻿using WebApp.Common.Libraries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
-namespace Denis.UserList.Common.Entities
+namespace WebApp.Common.Entities
 {
     public class User
     {
@@ -17,12 +18,12 @@ namespace Denis.UserList.Common.Entities
 
         public int Age => DateTimeAdditional.CompleteYearDifference(BirthDate, DateTime.Now);
 
-        public byte[] Image { get; set; }
+        public int? ImageId { get; set; }
 
         public User()
         {
             awards = new HashSet<Award>();
-            Image = new byte[0];
+            ImageId = null;
         }
 
         public User(int id, string name, DateTime birthDate)
@@ -31,7 +32,6 @@ namespace Denis.UserList.Common.Entities
             Name = name;
             BirthDate = birthDate;
             awards = new HashSet<Award>();
-            Image = new byte[0];
         }
 
         public bool AddAward(Award award) 

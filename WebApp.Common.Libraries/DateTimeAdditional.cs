@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Denis.UserList.Common.Libraries
+namespace WebApp.Common.Libraries
 {
     public class DateTimeAdditional
     {

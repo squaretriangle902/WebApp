@@ -1,12 +1,12 @@
-﻿using Denis.UserList.Common.Entities;
-using Denis.UserList.DAL.Fake;
+﻿using WebApp.Common.Entities;
+using WebApp.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Denis.UserList.DAL.File
+namespace WebApp.DAL.File
 {
     public struct UserAward
     {
@@ -20,13 +20,13 @@ namespace Denis.UserList.DAL.File
         }
     }
 
-    public class FileUserDAO : IUserDAO
+    public class FileUserDAO
     {
-        private readonly IAwardDAO awardDAO;
+        private readonly IAwardDao awardDAO;
 
         public int MaxUserID { get; private set ;}
 
-        public FileUserDAO(IAwardDAO awardDAO)
+        public FileUserDAO(IAwardDao awardDAO)
         {
             InitializeFileSources();
             this.awardDAO = awardDAO;
@@ -44,7 +44,7 @@ namespace Denis.UserList.DAL.File
             }
             catch (Exception exception)
             {
-                throw new DALException("Cannot get all users", exception);
+                throw new DalException("Cannot get all users", exception);
             }
         }
 
@@ -61,7 +61,7 @@ namespace Denis.UserList.DAL.File
             }
             catch (Exception exception)
             {
-                throw new DALException("Cannot delete user", exception);
+                throw new DalException("Cannot delete user", exception);
             }
         }
 
@@ -86,7 +86,7 @@ namespace Denis.UserList.DAL.File
             }
             catch (Exception exception)
             {
-                throw new DALException("Cannot add award to user", exception);
+                throw new DalException("Cannot add award to user", exception);
             }
         }
 
@@ -100,7 +100,7 @@ namespace Denis.UserList.DAL.File
             }
             catch (Exception exception)
             {
-                throw new DALException("Cannot add award", exception);
+                throw new DalException("Cannot add award", exception);
             }
         }
 
@@ -129,6 +129,21 @@ namespace Denis.UserList.DAL.File
         private static string UserAwardDatabaseEntryString(UserAward userAward)
         {
             return string.Format("{0},{1}", userAward.userID.ToString(), userAward.awardID.ToString());
+        }
+
+        public void AddUser(User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddUserAward(int userId, int awardId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ImagePath(int imageId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

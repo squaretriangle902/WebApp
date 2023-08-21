@@ -1,16 +1,17 @@
-﻿using Denis.UserList.Common.Entities;
+﻿using WebApp.Common.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using WebApp.DAL.Interfaces;
 
-namespace Denis.UserList.DAL.File
+namespace WebApp.DAL.File
 {
-    public class FileAwardDAO : IAwardDAO
+    public class FileAwardDao
     {
         public int MaxAwardID { get; private set; }
 
-        public FileAwardDAO()
+        public FileAwardDao()
         {
             InitializeFileSources();
             var awards = GetAllAwards().ToList();
@@ -27,7 +28,7 @@ namespace Denis.UserList.DAL.File
             }
             catch (Exception exception)
             {
-                throw new DALException("Cannot get all awards", exception);
+                throw new DalException("Cannot get all awards", exception);
             }
         }
 
@@ -46,7 +47,7 @@ namespace Denis.UserList.DAL.File
             }
             catch (Exception exception)
             {
-                throw new DALException("Cannot get award by user ID", exception);
+                throw new DalException("Cannot get award by user ID", exception);
             }
         }
 
@@ -60,7 +61,7 @@ namespace Denis.UserList.DAL.File
             }
             catch (Exception exception)
             {
-                throw new DALException("Cannot add award", exception);
+                throw new DalException("Cannot add award", exception);
             }
         }
 
@@ -74,7 +75,7 @@ namespace Denis.UserList.DAL.File
             }
             catch (Exception exception)
             {
-                throw new DALException("Cannot add award", exception);
+                throw new DalException("Cannot add award", exception);
             }
         }
 
@@ -98,6 +99,21 @@ namespace Denis.UserList.DAL.File
         {
             Common.CreateTableIfNotExists(Common.AwardFileLocation);
             Common.CreateTableIfNotExists(Common.UsersAwardsFileLocation);
+        }
+
+        public Award GetAward(int awardId)
+        {
+            var awards = GetAllAwards().Where(award => award.Id == awardId);
+            if (awards.Any())
+            {
+                return awards.First();
+            }
+            throw new DalException("Cannot find award by ID");
+        }
+
+        public void DeleteAward(int awardId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

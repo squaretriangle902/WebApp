@@ -29,7 +29,7 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            <img src="@Url.Action("GetImage", new {userId = item.Id})"/>
+            <img src="@Url.Action("GetImage", new {imageId = item.ImageId})" />
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Name)
@@ -41,13 +41,13 @@
             @Html.DisplayFor(modelItem => item.Age)
         </td>
         <td>
-            @Html.ActionLink("Подробнее", "Get", new { userId = item.Id })
+            @Html.ActionLink("Подробнее", "Details", new { userId = item.Id })
         </td>
         <td>
-            @Html.ActionLink("Редактировать", "Edit", new { userId = item.Id })
+            @Html.ActionLink("Редактировать", "Update", new { userId = item.Id })
         </td>
         <td>
-            @Html.ActionLink("Удалить", "Remove", new { userId = item.Id })
+            @Html.ActionLink("Удалить", "Delete", new { userId = item.Id })
         </td>
     </tr>
 }

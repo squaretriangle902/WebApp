@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2ADDFED8-C4C7-4F14-A021-497DED139C93}</ProjectGuid>
+    <ProjectGuid>{6E04A914-DD1A-42FF-9FCE-A399802E72BD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WebApp.DAL.Interfaces</RootNamespace>
-    <AssemblyName>WebApp.DAL.Interfaces</AssemblyName>
+    <RootNamespace>WebApp.Common.Configuration</RootNamespace>
+    <AssemblyName>WebApp.Common.Configuration</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -33,7 +33,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,15 +41,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IAwardDao.cs" />
-    <Compile Include="IImageDao.cs" />
-    <Compile Include="IUserDao.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WebApp.Common.Entities\WebApp.Common.Entities.csproj">
-      <Project>{f8167c4d-1307-496c-85da-7abb7076eb6c}</Project>
-      <Name>WebApp.Common.Entities</Name>
+    <ProjectReference Include="..\WebApp.BLL.Core\WebApp.BLL.Core.csproj">
+      <Project>{f277704f-1844-488d-91fb-42bc93f36aad}</Project>
+      <Name>WebApp.BLL.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebApp.BLL.Interfaces\WebApp.BLL.Interfaces.csproj">
+      <Project>{b669c036-b36f-4614-babc-38bf003d19cd}</Project>
+      <Name>WebApp.BLL.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebApp.DAL.Interfaces\WebApp.DAL.Interfaces.csproj">
+      <Project>{2addfed8-c4c7-4f14-a021-497ded139c93}</Project>
+      <Name>WebApp.DAL.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebApp.DAL.SQL\WebApp.DAL.SQL.csproj">
+      <Project>{25ee03d7-1115-4ddb-bfa9-0926b750c978}</Project>
+      <Name>WebApp.DAL.SQL</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

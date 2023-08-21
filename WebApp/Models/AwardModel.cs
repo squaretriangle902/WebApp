@@ -1,55 +1,70 @@
-﻿using Denis.UserList.Common.Entities;
-using System;
+﻿using WebApp.Common.Entities;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.Services.Description;
+using WebApp.Common.Configuration;
+using System;
 
 namespace WebApp.Models
 {
     public class AwardModel
     {
-        const int ImageResizeWidth = 100;
-        const int ImageResizeHeight = 100;
-
         public int Id { get; set; }
         public string Title { get; set; }
+        public int? ImageId { get; set; }
         public HttpPostedFileBase Image { get; set; }
 
-        public static IEnumerable<AwardModel> GetAll()
+        public static IEnumerable<AwardModel> GetAllAwards()
         {
-            return Logic.AwardLogic.GetAllAwards().Select(award => new AwardModel 
-            { 
-                Id = award.Id, 
-                Title = award.Title 
-            });
+            return Startup.AwardLogic.GetAllAwards().Select(award => Common.ConvertToModel(award)).
+                OrderBy(awardModel => awardModel.Title);
         }
 
-        public static void Add(AwardModel awardModel)
+        public static AwardModel GetAward(int userId)
         {
-            var award = new Award()
-            {
-                Id = 0,
-                Title = awardModel.Title,
-                Image = Common.ImageToBytes(awardModel.Image)
-            };
-            Logic.AwardLogic.AddAward(award);
+            return Common.ConvertToModel(Startup.AwardLogic.GetAward(userId));
         }
 
-        public static byte[] GetImage(int awardId)
+        public static void AddAward(AwardModel awardModel)
         {
-            var image = Logic.AwardLogic.GetImage(awardId);
-            if (image.Length != 0)
+            var award = Common.ConvertToEntity(awardModel);
+            if (!(awardModel.Image is null))
             {
-                return Common.ResizeImage(image, ImageResizeWidth, ImageResizeHeight);
+                var image = System.Drawing.Image.FromStream(awardModel.Image.InputStream, true, true);
+                Startup.AwardLogic.SetImage(award, image);
             }
-            return Common.ResizeImage(GetDefaultImage(), 100, 100);
+            Startup.AwardLogic.AddAward(award);
         }
 
-        private static System.Drawing.Image GetDefaultImage()
+        public static byte[] GetImage(int? imageId)
         {
-            return System.Drawing.Image.FromFile(@"C:\Users\squar\source\repos\WebApp\WebApp\Content\defaultAwardImage.png");
+            if (imageId is int imageIdValue)
+            {
+                using (var image = Startup.AwardLogic.GetImage(
+                    imageIdValue, 
+                    Constants.AwardImageResizeWidth,
+                    Constants.AwardImageResizeHeight))
+                {
+                    return Common.ConvertToBytes(image);
+                }
+            }
+            return null;
+        }
+
+        public static void DeleteAward(int awardId)
+        {
+            Startup.AwardLogic.DeleteAward(awardId);
+        }
+
+        public static void UpdateAward(AwardModel awardModel)
+        {
+            var award = Common.ConvertToEntity(awardModel);
+            if (!(awardModel.Image is null))
+            {
+                var image = System.Drawing.Image.FromStream(awardModel.Image.InputStream, true, true);
+                Startup.AwardLogic.SetImage(award, image);
+            }
+            Startup.AwardLogic.UpdateAward(award);
         }
     }
 }

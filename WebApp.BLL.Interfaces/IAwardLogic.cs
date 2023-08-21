@@ -1,16 +1,20 @@
-﻿using Denis.UserList.Common.Entities;
-using Denis.UserList.DAL.File;
+﻿using WebApp.Common.Entities;
+using WebApp.DAL.Interfaces;
 using System.Collections.Generic;
+using System.Drawing;
 
-namespace Denis.UserList.BLL.Core
+namespace WebApp.BLL.Interfaces
 {
     public interface IAwardLogic
     {
-        IAwardDAO AwardDAO { get; }
         IEnumerable<Award> GetAllAwards();
-        IEnumerable<Award> GetUserAwards(int userID);
-        int AddAward(string name);
-        Award GetAward(int awardID);
+        IEnumerable<Award> GetUserAwards(int userId);
+        int AddAward(Award award);
+        Award GetAward(int awardId);
+        void UpdateAward(Award award);
+        void DeleteAward(int awardId);
         void DatabaseUpdate();
+        void SetImage(Award award, Image image);
+        Image GetImage(int imageId, int width, int height);
     }
 }

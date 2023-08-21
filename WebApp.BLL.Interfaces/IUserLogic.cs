@@ -1,17 +1,21 @@
-﻿using Denis.UserList.Common.Entities;
+﻿using WebApp.Common.Entities;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
-namespace Denis.UserList.BLL.Core
+namespace WebApp.BLL.Interfaces
 {
     public interface IUserLogic
     {
         IEnumerable<User> GetAllUsers();
-        User GetUser(int userID);
-        int Add(string name, DateTime birthDate);
-        void DeleteUser(int userID);
-        void AddUserAward(int userID, int awardID);
-        void DatabaseUpdate();
-        IEnumerable<Award> GetUserAwards(int userID);
+        User GetUser(int userId);
+        int AddUser(User user);
+        void DeleteUser(int userId);
+        void UpdateUser(User user);
+        void AddUserAward(int userId, int awardId);
+        void DeleteUserAward(int userId, int awardId);
+        IEnumerable<Award> GetUserAwards(int userId);
+        void SetImage(User user, Image image);
+        Image GetImage(int imageId, int width, int height);
     }
 }

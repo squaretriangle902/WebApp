@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace WebApp.DAL.File
+namespace WebApp.DAL.SQL
 {
     internal class DalException : Exception
     {
-        public DalException() : base("DAL exception")
+        public DalException() : base("BLL exception")
         {
         }
 

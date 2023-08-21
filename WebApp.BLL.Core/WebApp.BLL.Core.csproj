@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,6 +45,7 @@
     <Compile Include="AwardLogic.cs" />
     <Compile Include="BLLException.cs" />
     <Compile Include="Common.cs" />
+    <Compile Include="ImageLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserLogic.cs" />
   </ItemGroup>
@@ -67,6 +69,10 @@
     <ProjectReference Include="..\WebApp.DAL.Interfaces\WebApp.DAL.Interfaces.csproj">
       <Project>{2addfed8-c4c7-4f14-a021-497ded139c93}</Project>
       <Name>WebApp.DAL.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebApp.DAL.SQL\WebApp.DAL.SQL.csproj">
+      <Project>{25ee03d7-1115-4ddb-bfa9-0926b750c978}</Project>
+      <Name>WebApp.DAL.SQL</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

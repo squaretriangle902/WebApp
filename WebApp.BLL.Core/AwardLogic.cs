@@ -1,38 +1,36 @@
-﻿using Denis.UserList.Common.Entities;
-using Denis.UserList.DAL.File;
+﻿using WebApp.Common.Entities;
+using WebApp.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using WebApp.BLL.Interfaces;
+using System.Drawing;
 
-namespace Denis.UserList.BLL.Core
+namespace WebApp.BLL.Core
 {
     public class AwardLogic : IAwardLogic
     {
-        private readonly Dictionary<int, Award> awardCache;
-        private int maxAwardID;
-        private bool isCacheActual;
+        private readonly IImageLogic imageLogic;
+        private readonly IAwardDao awardDao;
 
-        public IAwardDAO AwardDAO { get; private set; }
-
-        public AwardLogic()
+        public AwardLogic(IAwardDao awardDao, IImageLogic awardImageLogic)
         {
-            awardCache = new Dictionary<int, Award>();
-            switch (Common.ReadConfigFile("award_database"))
-            {
-                case "awardDAO":
-                    AwardDAO = new FileAwardDAO();
-                    break;
-                default:
-                    throw new BLLException("Cannot get awards database");
-            }
-            maxAwardID = AwardDAO.MaxAwardID;
+            this.awardDao = awardDao;
+            this.imageLogic = awardImageLogic;
         }
 
-        public IEnumerable<Award> GetUserAwards(int userID)
+        public IEnumerable<Award> GetAllAwards()
+        {
+            foreach (var award in awardDao.GetAllAwards())
+            {
+                yield return award;
+            }
+        }
+
+        public IEnumerable<Award> GetUserAwards(int userId)
         {
             try
             {
-                return AwardDAO.GetUserAwards(userID);
+                return awardDao.GetUserAwards(userId);
             }
             catch (Exception exception)
             {
@@ -40,103 +38,82 @@ namespace Denis.UserList.BLL.Core
             }
         }
 
-        public IEnumerable<Award> GetAllAwards()
-        {
-            if (!isCacheActual)
-            {
-                CacheAddAllAwards();
-            }
-            foreach (var award in awardCache.Values)
-            {
-                yield return award;
-            }
-        }
-
-        public int AddAward(string title)
-        {
-            if (string.IsNullOrEmpty(title))
-            {
-                throw new ArgumentException("title is null or empty");
-            }
-            awardCache.Add(++maxAwardID, new Award(maxAwardID, title));
-            return maxAwardID;
-        }
-
-        public Award GetAward(int awardID)
-        {
-            return GetAwardInternal(awardID);
-        }
-
-        public void DatabaseUpdate()
-        {
-            AwardDAO.AddAwards(awardCache.Values);
-        }
-
-        private void CacheAddAward(int awardID)
+        public Award GetAward(int awardId)
         {
             try
             {
-                awardCache.Add(awardID, AwardDAO.GetAllAwards().First(award => award.Id == awardID));
+                return awardDao.GetAward(awardId);
             }
             catch (Exception exception)
             {
-                throw new BLLException("Cannot get user by ID", exception);
+                throw new BLLException("Cannot find award by ID", exception);
             }
         }
-
-        private Award GetAwardInternal(int awardID)
-        {
-            if (!awardCache.ContainsKey(awardID))
-            {
-                CacheAddAward(awardID);
-            }
-            if (!awardCache.TryGetValue(awardID, out Award award) || award is null)
-            {
-                throw new BLLException("Cannot find user by ID");
-            }
-            return award;
-        }
-
-        private void CacheAddAllAwards()
-        {
-            try
-            {
-                isCacheActual = true;
-                foreach (var award in AwardDAO.GetAllAwards())
-                {
-                    awardCache.Add(award.Id, award);
-                }
-            }
-            catch (Exception exception)
-            {
-                throw new BLLException("Cannot get all awards", exception);
-            }
-        }
-
         public int AddAward(Award award)
         {
-            if (!IsValid(award))
+            if (!IsAwardValid(award))
             {
-                throw new ArgumentException("award is not valid");
+                throw new ArgumentException("Award is not valid");
             }
-            award.Id = ++maxAwardID;
-            awardCache.Add(award.Id, award);
-            return award.Id;
+            try
+            {
+                awardDao.AddAward(award);
+                return award.Id;
+            }
+            catch (Exception exception)
+            {
+                throw new BLLException("Cannot add award", exception);
+            }
         }
 
-        private bool IsValid(Award award)
+        public void DeleteAward(int awardId)
+        {
+            try
+            {
+                awardDao.DeleteAward(awardId);
+            }
+            catch (Exception exception)
+            {
+                throw new BLLException("Cannot delete award by ID", exception);
+            }
+        }
+
+        public Image GetImage(int imageId, int width, int height)
+        {
+            return imageLogic.GetImage(imageId, width, height);
+        }
+
+        public void SetImage(Award award, Image image)
+        {
+            if (award.ImageId is int imageId)
+            {
+                imageLogic.UpdateImage(image, imageId);
+                return;
+            }
+            award.ImageId = imageLogic.SaveImage(image);
+        }
+
+        public void UpdateAward(Award award)
+        {
+            try
+            {
+                awardDao.UpdateAward(award);
+            }
+            catch (Exception exception)
+            {
+                throw new BLLException("Cannot update award", exception);
+            }
+        }
+
+        private bool IsAwardValid(Award award)
         {
             return !string.IsNullOrEmpty(award.Title);
         }
 
-        public byte[] GetImage(int awardId)
+        public void DatabaseUpdate()
         {
-            return GetAwardInternal(awardId).Image;
+            throw new NotImplementedException();
         }
 
-        public void SetImage(int awardId, byte[] image)
-        {
-            GetAwardInternal(awardId).Image = image;
-        }
     }
 }
